@@ -10,6 +10,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { Eye } from '@primeicons/angular/eye';
 import { EyeSlash } from '@primeicons/angular/eye-slash';
 import { Button, ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -23,7 +24,8 @@ import { Button, ButtonModule } from 'primeng/button';
     InputPasswordModule,
     IconFieldModule,
     InputIconModule,
-    ButtonModule
+    ButtonModule,
+    RouterLink
   ],
   providers: [],
   templateUrl: './login.html',
