@@ -1,0 +1,57 @@
+<main class="flex w-dvw h-dvh bg-surface text-ink">
+    <div class="flex flex-col h-dvh w-1/2 bg-cream items p-16">
+        <div class="flex gap-10 flex-col justify-center w-11/12 h-full">
+            <h1 class="font-semibold text-5xl text-ink tracking-tight max-w-[70%]">Três campos e você já pode enviar o
+                primeiro
+                currículo.
+            </h1>
+            <div class="flex flex-col gap-3 bg-white p-6 w-full rounded-2xl">
+                <span class="text-md max-w-8/12 font-bold">
+                    O que guardamos?
+                </span>
+                <div class="flex flex-col gap-3">
+                    <span>
+                        Nome, email e senha para você acessar o histórico.
+                    </span>
+                    <span>
+                        O PDF enviado fica na sua conta e pode ser apagado a qualquer momento.
+                    </span>
+                    <span>
+                        Nenhum dado é compartilhado com empresas
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="h-full items-center  justify-center flex-1 flex flex-col">
+        <div class="flex flex-col gap-6 w-2/3">
+            <div class="flex flex-col gap-2">
+                <h1 class="font-medium text-2xl text-ink tracking-tight">Entrar</h1>
+                <span class="text-muted text-md">Use o e-mail cadastrado na plataforma.</span>
+            </div>
+            <div class="flex flex-col gap-4">
+                <form (submit)="onSubmit($event)" class="flex flex-col gap-6">
+                    <p-float-label variant="on">
+                        <input pInputText type="text" [formField]="registerForm.name" class="w-full" id="name">
+                        <label for="name">Nome completo</label>
+                    </p-float-label>
+                    <p-floatlabel variant="on">
+                        <input pInputText type="email" [formField]="registerForm.email" id="email" class="w-full" />
+                        <label for="email">Email</label>
+                    </p-floatlabel>
+                    <password-input [field]="registerForm.password" />
+                    <div class="flex gap-2 items-center">
+                        <p-checkbox [formField]="registerForm.termsAndPrivacy" [binary]="true" />
+                        <label class="text-sm">Concordo com os termos de uso e política de privacidade.</label>
+                    </div>
+                    <button pButton severity="contrast" type="submit">Crie minha conta</button>
+                </form>
+            </div>
+            <div class="flex w-full items-center justify-center">
+                <span class="text-sm ">Já tem uma conta? <a
+                        class="p-0! text-sm hover:decoration-1 hover:underline-offset-2 hover:underline" pButton link
+                        routerLink="/">Entrar agora</a></span>
+            </div>
+        </div>
+    </div>
+</main>

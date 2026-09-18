@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Check } from '@primeicons/angular/check';
 import { loginSchema, type LoginFormData } from './login-form';
 import { form, FormField, validateStandardSchema } from '@angular/forms/signals';
@@ -7,10 +7,9 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputPasswordModule } from 'primeng/inputpassword';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { Eye } from '@primeicons/angular/eye';
-import { EyeSlash } from '@primeicons/angular/eye-slash';
-import { Button, ButtonModule } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
+import { PasswordInput } from '../shared/password-input';
 
 @Component({
   selector: 'login',
@@ -19,20 +18,20 @@ import { RouterLink } from '@angular/router';
     Check,
     FormField,
     FloatLabelModule,
-    Eye,
-    EyeSlash,
+
     InputPasswordModule,
     IconFieldModule,
     InputIconModule,
     ButtonModule,
-    RouterLink
-  ],
+    RouterLink,
+    PasswordInput
+],
   providers: [],
   templateUrl: './login.html',
 })
 export class Login {
   loginModel = signal<LoginFormData>({
-    email: '',
+    email: "",
     password: '',
   });
   mask: boolean = true
