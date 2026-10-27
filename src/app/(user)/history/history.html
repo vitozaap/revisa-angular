@@ -1,0 +1,124 @@
+<app-sidebar>
+  <main class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-8 py-8 lg:px-12">
+    <div class="flex items-end justify-between gap-6">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink">Minhas análises</h1>
+        <span class="text-muted">
+          @if (analyses().length) {
+            {{ analyses().length }} relatórios salvos na sua conta. Melhor nota até agora: {{ bestScore() }}.
+          } @else {
+            Seus relatórios ficam salvos aqui depois de cada análise.
+          }
+        </span>
+      </div>
+      <a pButton severity="contrast" routerLink="/new-analysis">Nova análise</a>
+    </div>
+
+    @if (analyses().length) {
+      <div class="flex gap-2">
+        @for (option of filters; track option.value) {
+          <button
+            pButton
+            [severity]="filter() === option.value ? 'contrast' : 'secondary'"
+            [outlined]="filter() !== option.value"
+            (click)="filter.set(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+
+      <ul class="flex flex-col gap-3">
+        @for (analysis of filteredAnalyses(); track analysis.id) {
+          @let isLatest = analysis.id === latestId();
+          <li class="flex items-center gap-6 rounded-2xl border border-line bg-surface px-5 py-4">
+            <div
+              class="flex size-14 shrink-0 flex-col items-center justify-center rounded-full leading-none"
+              [class]="scoreClass(analysis.score)"
+            >
+              <span class="font-heading text-xl font-semibold">{{ analysis.score }}</span>
+              <span class="text-[0.625rem] opacity-80">/100</span>
+            </div>
+
+            <div class="flex min-w-0 flex-1 flex-col gap-1">
+              <div class="flex items-center gap-2">
+                <span class="truncate font-heading font-semibold text-ink">{{ analysis.fileName }}</span>
+                @if (isLatest) {
+                  <span
+                    class="shrink-0 rounded bg-cream px-1.5 py-0.5 text-[0.625rem] font-semibold uppercase tracking-widest text-gold-dark"
+                  >
+                    Mais recente
+                  </span>
+                }
+              </div>
+              @if (analysis.jobTitle) {
+                <span class="truncate text-sm text-muted">{{ analysis.jobTitle }}</span>
+              } @else {
+                <span class="text-sm italic text-subtle">Análise sem descrição de vaga</span>
+              }
+            </div>
+
+            <div class="hidden w-28 shrink-0 flex-col text-sm md:flex">
+              <span class="text-ink-soft">{{ analysis.createdAt | date: 'dd/MM/yyyy' }}</span>
+              <span class="text-xs text-subtle">{{ analysis.createdAt | date: 'HH:mm' }}</span>
+            </div>
+
+            <div class="flex shrink-0 items-center gap-2">
+              <a
+                pButton
+                [routerLink]="['/history', analysis.id]"
+                [severity]="isLatest ? 'contrast' : 'secondary'"
+                [outlined]="!isLatest"
+              >
+                Ver relatório
+              </a>
+              <button
+                pButton
+                iconOnly
+                severity="secondary"
+                outlined
+                aria-label="Mais opções"
+                aria-haspopup="true"
+                (click)="openActions($event, analysis, actionsMenu)"
+              >
+                <svg data-p-icon="ellipsis-h"></svg>
+              </button>
+            </div>
+          </li>
+        } @empty {
+          <li class="rounded-2xl border border-line bg-surface px-6 py-10 text-center text-sm text-subtle">
+            Nenhuma análise neste filtro.
+          </li>
+        }
+      </ul>
+
+      <span class="text-sm text-subtle">
+        Mostrando {{ filteredAnalyses().length }} de {{ analyses().length }} análises. Os relatórios ficam
+        salvos por 12 meses.
+      </span>
+    } @else {
+      <section
+        class="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-line-strong bg-surface px-6 py-32 text-center"
+      >
+        <div class="flex size-14 items-center justify-center rounded-full bg-cream">
+          <span class="size-4 rounded-full bg-gold"></span>
+        </div>
+        <h2 class="text-xl font-semibold text-ink">Nenhuma análise ainda</h2>
+        <span class="max-w-md text-subtle">
+          Quando você fizer sua primeira análise, o relatório aparece aqui com a nota, a vaga e a
+          data.
+        </span>
+      </section>
+    }
+
+    <p-menu #actionsMenu [model]="actionItems" [popup]="true" appendTo="body">
+      <ng-template #item let-item>
+        <a class="p-menu-item-link" [class]="item.linkClass">
+          <svg [pIcon]="item.icon" class="p-menu-item-icon"></svg>
+          <span class="p-menu-item-label">{{ item.label }}</span>
+        </a>
+      </ng-template>
+    </p-menu>
+    <p-confirmdialog />
+  </main>
+</app-sidebar>

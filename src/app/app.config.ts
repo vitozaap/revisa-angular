@@ -1,5 +1,6 @@
 import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideSignalFormsConfig } from '@angular/forms/signals';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -8,7 +9,11 @@ import { RevisaPreset } from './revisa-preset';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
+    // Marca os campos ainda não tocados, para o vermelho de erro só aparecer depois (ver styles.css)
+    provideSignalFormsConfig({
+      classes: { 'field-untouched': (field) => !field.state().touched() },
+    }),
     providePrimeNG({
       license: environment.primeNgLicense,
       theme: {

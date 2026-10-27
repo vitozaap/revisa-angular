@@ -47,3 +47,25 @@
     font-family: var(--font-heading);
   }
 }
+
+/* Sidebar colapsada: mostra só os ícones */
+.p-sidebar[data-collapsible='icon'] .p-sidebar-menu-button > span:last-child {
+  display: none;
+}
+
+/* Signal Forms: só mostra o estado inválido do PrimeNG depois que o campo foi tocado.
+   A classe field-untouched vem do provideSignalFormsConfig em app.config.ts */
+.field-untouched {
+  --p-inputtext-invalid-border-color: var(--p-inputtext-border-color);
+  --p-inputtext-invalid-placeholder-color: var(--p-inputtext-placeholder-color);
+  --p-checkbox-invalid-border-color: var(--p-checkbox-border-color);
+}
+.field-untouched:focus {
+  --p-inputtext-invalid-border-color: var(--p-inputtext-focus-border-color);
+}
+.p-floatlabel:has(.field-untouched) {
+  --p-floatlabel-invalid-color: var(--p-floatlabel-color);
+}
+.p-floatlabel:has(.field-untouched:focus) {
+  --p-floatlabel-invalid-color: var(--p-floatlabel-focus-color);
+}

@@ -30,21 +30,30 @@
                 <span class="text-muted text-md">Use o e-mail cadastrado na plataforma.</span>
             </div>
             <div class="flex flex-col gap-4">
-                <form (submit)="onSubmit($event)" class="flex flex-col gap-6">
-                    <p-float-label variant="on">
-                        <input pInputText type="text" [formField]="registerForm.name" class="w-full" id="name">
-                        <label for="name">Nome completo</label>
-                    </p-float-label>
-                    <p-floatlabel variant="on">
-                        <input pInputText type="email" [formField]="registerForm.email" id="email" class="w-full" />
-                        <label for="email">Email</label>
-                    </p-floatlabel>
-                    <password-input [field]="registerForm.password" />
-                    <div class="flex gap-2 items-center">
-                        <p-checkbox [formField]="registerForm.termsAndPrivacy" [binary]="true" />
-                        <label class="text-sm">Concordo com os termos de uso e política de privacidade.</label>
+                <form (submit)="onSubmit($event)" novalidate class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-1">
+                        <p-float-label variant="on">
+                            <input pInputText type="text" [formField]="registerForm.name" class="w-full" id="name">
+                            <label for="name">Nome completo</label>
+                        </p-float-label>
+                        <field-error [field]="registerForm.name" />
                     </div>
-                    <button pButton severity="contrast" type="submit">Crie minha conta</button>
+                    <div class="flex flex-col gap-1">
+                        <p-floatlabel variant="on">
+                            <input pInputText type="email" [formField]="registerForm.email" id="email" class="w-full" />
+                            <label for="email">Email</label>
+                        </p-floatlabel>
+                        <field-error [field]="registerForm.email" />
+                    </div>
+                    <password-input [field]="registerForm.password" />
+                    <div class="flex flex-col gap-1">
+                        <div class="flex gap-2 items-center">
+                            <p-checkbox [formField]="registerForm.termsAndPrivacy" [binary]="true" inputId="terms" />
+                            <label for="terms" class="text-sm">Concordo com os termos de uso e política de privacidade.</label>
+                        </div>
+                        <field-error [field]="registerForm.termsAndPrivacy" />
+                    </div>
+                    <button pButton severity="contrast" size="large" type="submit">Crie minha conta</button>
                 </form>
             </div>
             <div class="flex w-full items-center justify-center">

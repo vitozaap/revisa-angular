@@ -9,6 +9,7 @@ import { InputPasswordModule } from 'primeng/inputpassword';
 import { InputTextModule } from 'primeng/inputtext';
 import { type RegisterFormData, registerSchema } from './register-form';
 import { CheckboxModule } from 'primeng/checkbox';
+import { FieldError } from '../shared/field-error';
 import { PasswordInput } from '../shared/password-input';
 
 @Component({
@@ -24,6 +25,7 @@ import { PasswordInput } from '../shared/password-input';
     ButtonModule,
     RouterLink,
     CheckboxModule,
+    FieldError,
   ],
   selector: 'app-register',
   templateUrl: './register.html',
@@ -33,7 +35,7 @@ export class Register {
     name: '',
     email: '',
     password: '',
-    termsAndPrivacy: true,
+    termsAndPrivacy: false,
   });
 
   registerForm = form(this.registerModel, (path) => {
@@ -42,6 +44,11 @@ export class Register {
 
   onSubmit(event: Event) {
     event?.preventDefault();
+
+    // Marca todos os campos como tocados para mostrar os erros de quem nem foi preenchido
+    this.registerForm().markAsTouched();
+    if (this.registerForm().invalid()) return;
+
     const credentials = this.registerModel();
     console.log(credentials);
   }

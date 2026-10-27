@@ -1,0 +1,108 @@
+<app-sidebar>
+  <main class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-8 py-8 lg:grid-cols-[1fr_20rem] lg:px-12">
+    <form (submit)="onSubmit($event)" class="flex flex-col gap-5">
+      <h1 class="text-3xl font-semibold tracking-tight text-ink">Nova análise</h1>
+
+      <section class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5">
+        <div
+          class="flex size-12 shrink-0 items-center justify-center rounded-lg border border-line bg-danger-bg text-xs font-bold text-danger"
+        >
+          PDF
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col">
+          <span class="text-xs font-semibold uppercase tracking-[0.12em] text-gold-deep">Currículo principal</span>
+          <span class="truncate font-medium text-ink">{{ resume.fileName }}</span>
+          <span class="text-sm text-subtle">Atualizado em {{ resume.updatedAt | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          outlined
+          class="shrink-0 border-line-strong! bg-surface! text-ink!"
+        >
+          Atualizar currículo
+        </button>
+      </section>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+          <h2 class="text-lg font-semibold text-ink">Vaga</h2>
+          <span class="text-sm text-muted">Opcional, mas deixa a nota mais precisa.</span>
+        </div>
+
+        @let title = newAnalysisForm.jobTitle();
+        @let description = newAnalysisForm.jobDescription();
+        <div class="flex flex-col gap-1">
+          <p-floatlabel variant="on">
+            <input pInputText type="text" [formField]="newAnalysisForm.jobTitle" id="jobTitle" class="w-full" />
+            <label for="jobTitle">Título da vaga</label>
+          </p-floatlabel>
+          @if (title.touched() && title.errors()[0]; as error) {
+            <span class="text-xs text-danger">{{ error.message }}</span>
+          } @else {
+            <span class="text-xs text-subtle">Ex.: Desenvolvedor(a) Front-end Júnior — Nuvemtech</span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <p-floatlabel variant="on">
+            <textarea
+              pTextarea
+              [formField]="newAnalysisForm.jobDescription"
+              id="jobDescription"
+              rows="9"
+              class="w-full resize-none leading-relaxed"
+            ></textarea>
+            <label for="jobDescription">Descrição da vaga</label>
+          </p-floatlabel>
+          <div class="flex justify-between gap-4 text-xs">
+            @if (description.errors()[0]; as error) {
+              <span class="text-danger">{{ error.message }}</span>
+            } @else {
+              <span class="text-subtle">Cole a descrição com requisitos e atividades.</span>
+            }
+            <span [class]="description.invalid() ? 'text-danger' : 'text-subtle'">
+              {{ description.value().length }} / {{ maxLength }} caracteres
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button
+          pButton
+          type="submit"
+          severity="contrast"
+          class="font-semibold!"
+          [disabled]="newAnalysisForm().invalid()"
+        >
+          Analisar currículo
+        </button>
+        <span class="text-sm text-subtle">A análise leva cerca de 20 segundos.</span>
+      </div>
+    </form>
+
+    <aside class="flex flex-col gap-5 lg:pt-14">
+      <section class="flex flex-col gap-3 rounded-2xl bg-cream p-6">
+        <h2 class="font-semibold text-ink">O que a IA vai avaliar</h2>
+        <ol class="flex flex-col gap-2 text-sm text-ink-soft">
+          @for (item of criteria; track item; let i = $index) {
+            <li class="flex gap-2">
+              <span class="font-semibold text-gold-deep">{{ (i + 1).toString().padStart(2, '0') }}</span>
+              {{ item }}
+            </li>
+          }
+        </ol>
+      </section>
+
+      <section class="flex flex-col gap-2 rounded-2xl border border-line bg-surface p-6">
+        <h2 class="font-semibold text-ink">Dica</h2>
+        <span class="text-sm leading-relaxed text-muted">
+          Exporte o currículo do editor como PDF de texto, não como imagem escaneada. Assim a IA
+          consegue ler todas as seções.
+        </span>
+      </section>
+    </aside>
+  </main>
+</app-sidebar>

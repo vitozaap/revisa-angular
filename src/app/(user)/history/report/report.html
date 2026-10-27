@@ -1,0 +1,162 @@
+<app-sidebar>
+  <main class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-8 py-8 lg:px-12">
+    @if (review(); as review) {
+      <div class="flex items-end justify-between gap-6">
+        <div class="flex min-w-0 flex-col gap-1">
+          <h1 class="text-3xl font-semibold tracking-tight text-ink">Relatório da análise</h1>
+          <span class="truncate text-sm text-subtle">
+            {{ resume()?.fileName }} ·
+            @if (review.jobTitle) {
+              vaga: {{ review.jobTitle }}
+            } @else {
+              sem descrição de vaga
+            }
+            · {{ review.createdAt | date: "dd/MM/yyyy 'às' HH:mm" }}
+          </span>
+        </div>
+        <div class="flex shrink-0 gap-2">
+          <button pButton severity="secondary" outlined class="border-line-strong! bg-surface! text-ink!">Baixar PDF</button>
+          <a pButton severity="contrast" routerLink="/new-analysis">Nova análise</a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div class="flex flex-col gap-5">
+          <section
+            class="flex flex-col items-center gap-4 rounded-2xl border border-line bg-surface p-6 text-center"
+          >
+            <span class="text-xs font-semibold uppercase tracking-[0.12em] text-subtle">Nota geral</span>
+            <div class="relative size-36">
+              <svg viewBox="0 0 120 120" class="size-full -rotate-90">
+                <circle cx="60" cy="60" [attr.r]="scoreRadius" class="fill-none stroke-track" stroke-width="12" />
+                <circle
+                  cx="60"
+                  cy="60"
+                  [attr.r]="scoreRadius"
+                  class="fill-none"
+                  [class]="tone().stroke"
+                  stroke-width="12"
+                  [attr.stroke-dasharray]="scoreCircumference"
+                  [attr.stroke-dashoffset]="scoreOffset()"
+                />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center leading-none">
+                <span class="font-heading text-4xl font-semibold text-ink">{{ review.finalScore }}</span>
+                <span class="mt-1 text-xs text-subtle">de 100</span>
+              </div>
+            </div>
+            <span class="rounded-full px-3 py-1 text-sm font-semibold" [class]="tone().badge">
+              {{ tone().label }}
+            </span>
+          </section>
+
+          <section class="flex flex-1 flex-col gap-4 rounded-2xl border border-line bg-surface p-6">
+            @if (review.descriptionScore !== null) {
+              <div class="flex items-center justify-between">
+                <h2 class="font-semibold text-ink">Aderência à vaga</h2>
+                <span class="font-heading text-xl font-semibold text-ink">{{ review.descriptionScore }}%</span>
+              </div>
+              <div class="h-1.5 overflow-hidden rounded-full bg-track">
+                <div class="h-full rounded-full bg-gold" [style.width.%]="review.descriptionScore"></div>
+              </div>
+
+              @if (review.attendedRequirements.length) {
+                <div class="flex flex-col gap-2">
+                  <span class="text-xs font-semibold uppercase tracking-[0.12em] text-success">
+                    Requisitos atendidos
+                  </span>
+                  <div class="flex flex-wrap gap-2">
+                    @for (requirement of review.attendedRequirements; track requirement) {
+                      <span class="rounded-md bg-success-bg px-2 py-1 text-sm text-success-ink">{{ requirement }}</span>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (review.notAttendedRequirements.length) {
+                <div class="flex flex-col gap-2">
+                  <span class="text-xs font-semibold uppercase tracking-[0.12em] text-danger">
+                    Não encontrados no currículo
+                  </span>
+                  <div class="flex flex-wrap gap-2">
+                    @for (requirement of review.notAttendedRequirements; track requirement) {
+                      <span class="rounded-md bg-danger-bg px-2 py-1 text-sm text-danger-ink">{{ requirement }}</span>
+                    }
+                  </div>
+                </div>
+              }
+            } @else {
+              <h2 class="font-semibold text-ink">Aderência à vaga</h2>
+              <span class="text-sm text-subtle">
+                Esta análise foi feita sem descrição de vaga. Faça uma nova análise com a vaga para ver
+                os requisitos atendidos.
+              </span>
+            }
+          </section>
+        </div>
+
+        <div class="flex flex-col gap-5 lg:col-span-2">
+          <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <section class="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6">
+              <h2 class="flex items-center gap-2 font-semibold text-ink">
+                <span class="flex size-6 items-center justify-center rounded-md bg-success-bg text-success">
+                  <svg pIcon="check" [size]="12"></svg>
+                </span>
+                Pontos fortes
+              </h2>
+              <ul class="flex flex-col gap-3 text-sm text-ink-soft">
+                @for (point of review.strongPoints; track point) {
+                  <li class="flex gap-2"><span class="text-success">–</span>{{ point }}</li>
+                }
+              </ul>
+            </section>
+
+            <section class="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6">
+              <h2 class="flex items-center gap-2 font-semibold text-ink">
+                <span
+                  class="flex size-6 items-center justify-center rounded-md bg-cream text-sm font-bold text-gold-deep"
+                >
+                  !
+                </span>
+                Pontos a melhorar
+              </h2>
+              <ul class="flex flex-col gap-3 text-sm text-ink-soft">
+                @for (point of review.weakPoints; track point) {
+                  <li class="flex gap-2"><span class="text-gold">–</span>{{ point }}</li>
+                }
+              </ul>
+            </section>
+          </div>
+
+          <section class="flex flex-1 flex-col gap-4 rounded-2xl border border-line bg-surface p-6">
+            <h2 class="flex items-center gap-2 font-semibold text-ink">
+              <span
+                class="flex size-6 items-center justify-center rounded-md bg-danger-bg text-sm font-semibold text-danger"
+              >
+                A
+              </span>
+              Português e formatação
+            </h2>
+            @for (error of review.formattingErrors; track error.original) {
+              <div class="flex items-center gap-3 rounded-lg border border-line bg-field px-4 py-2.5 text-sm">
+                <span class="text-danger line-through">{{ error.original }}</span>
+                <span class="text-subtle">→</span>
+                <span class="font-medium text-ink">{{ error.suggestion }}</span>
+              </div>
+            } @empty {
+              <span class="text-sm text-subtle">Nenhum erro de português ou formatação encontrado.</span>
+            }
+          </section>
+        </div>
+      </div>
+    } @else {
+      <section
+        class="flex flex-col items-center gap-3 rounded-2xl border-2 border-dashed border-line-strong bg-surface px-6 py-32 text-center"
+      >
+        <h2 class="text-xl font-semibold text-ink">Relatório não encontrado</h2>
+        <span class="text-subtle">Esta análise não existe ou foi removida.</span>
+        <a pButton severity="contrast" routerLink="/history" class="mt-2">Voltar para minhas análises</a>
+      </section>
+    }
+  </main>
+</app-sidebar>

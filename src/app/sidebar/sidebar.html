@@ -1,0 +1,80 @@
+<p-sidebar-layout class="min-h-dvh w-full bg-canvas" >
+  <p-sidebar [id]="sidebarId" collapsible="icon">
+    <p-sidebar-spacer />
+    <p-sidebar-aside>
+      <p-sidebar-panel>
+        <p-sidebar-header>
+          <p-sidebar-menu>
+            <p-sidebar-menu-item>
+              <a pSidebarMenuButton routerLink="/home" class="px-1!">
+                <app-logo />
+                <span class="font-heading font-semibold text-ink">Revisa</span>
+              </a>
+            </p-sidebar-menu-item>
+          </p-sidebar-menu>
+        </p-sidebar-header>
+        <p-sidebar-content>
+          <p-sidebar-group>
+            <p-sidebar-group-content>
+              <p-sidebar-menu class="gap-2">
+                @for (route of routes; track route.path) {
+                  <p-sidebar-menu-item>
+                    <a
+                      pSidebarMenuButton
+                      [routerLink]="route.path"
+                      routerLinkActive
+                      #link="routerLinkActive"
+                      [isActive]="link.isActive"
+                    >
+                      <svg [pIcon]="route.icon"></svg>
+                      <span>{{ route.label }}</span>
+                    </a>
+                  </p-sidebar-menu-item>
+                }
+              </p-sidebar-menu>
+            </p-sidebar-group-content>
+          </p-sidebar-group>
+        </p-sidebar-content>
+        <p-sidebar-footer>
+          <p-sidebar-menu>
+            <p-sidebar-menu-item>
+              <button
+                pSidebarMenuButton
+                class="p-1!"
+                aria-haspopup="true"
+                aria-controls="user-menu"
+                (click)="userMenu.toggle($event)"
+              >
+                <p-avatar
+                  [label]="initials"
+                  shape="circle"
+                  class="size-6 shrink-0 text-xs"
+                />
+                <span class="flex-1 truncate">{{ userName }}</span>
+                <span class="flex">
+                  <svg pIcon="chevron-up" [size]="12" class="text-subtle"></svg>
+                </span>
+              </button>
+              <p-menu #userMenu id="user-menu" [model]="userMenuItems" [popup]="true" appendTo="body" (onShow)="alignToButtonEnd(userMenu)">
+                <ng-template #item let-item>
+                  <a class="p-menu-item-link" [class]="item.linkClass">
+                    <svg [pIcon]="item.icon" class="p-menu-item-icon"></svg>
+                    <span class="p-menu-item-label">{{ item.label }}</span>
+                  </a>
+                </ng-template>
+              </p-menu>
+            </p-sidebar-menu-item>
+          </p-sidebar-menu>
+        </p-sidebar-footer>
+        <button pSidebarRail></button>
+      </p-sidebar-panel>
+    </p-sidebar-aside>
+  </p-sidebar>
+
+  <p-sidebar-main>
+    <app-header [sidebarId]="sidebarId" />
+    <div class="flex-1">
+      <ng-content />
+    </div>
+  </p-sidebar-main>
+</p-sidebar-layout>

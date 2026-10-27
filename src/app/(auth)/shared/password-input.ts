@@ -7,6 +7,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputPasswordModule } from 'primeng/inputpassword';
 import { InputTextModule } from 'primeng/inputtext';
+import { FieldError } from './field-error';
 
 @Component({
   imports: [
@@ -18,6 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
     FormField,
     Eye,
     EyeSlash,
+    FieldError,
   ],
   selector: 'password-input',
   templateUrl: './password-input.html',

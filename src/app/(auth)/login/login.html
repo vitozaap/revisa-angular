@@ -9,7 +9,7 @@
                 se candidatar.
             </span>
             <div class="flex flex-col w-full gap-3">
-                @for (text of checks; track checks) {
+                @for (text of checks; track text) {
                 <span class="text-sm flex gap-2 items-center font-light text-ink-soft"><svg data-p-icon="check"
                         class="rounded-full p-1 bg-gold text-white" color="white" [size]="24"></svg> {{text}}</span>
                 }
@@ -23,13 +23,16 @@
                 <span class="text-muted text-md">Use o e-mail cadastrado na plataforma.</span>
             </div>
             <div class="flex flex-col gap-4">
-                <form (submit)="onSubmit($event)" class="flex flex-col gap-6">
-                    <p-floatlabel variant="on">
-                        <input pInputText type="email" [formField]="loginForm.email" id="email" class="w-full" />
-                        <label for="email">Email</label>
-                    </p-floatlabel>
+                <form (submit)="onSubmit($event)" novalidate class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-1">
+                        <p-floatlabel variant="on">
+                            <input pInputText type="email" [formField]="loginForm.email" id="email" class="w-full" />
+                            <label for="email">Email</label>
+                        </p-floatlabel>
+                        <field-error [field]="loginForm.email" />
+                    </div>
                     <password-input [field]="loginForm.password" />
-                    <button pButton severity="contrast" type="submit">Entrar</button>
+                    <button pButton severity="contrast" size="large" type="submit">Entrar</button>
                 </form>
             </div>
             <div class="flex w-full items-center justify-center">

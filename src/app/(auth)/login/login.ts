@@ -1,14 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Check } from '@primeicons/angular/check';
 import { loginSchema, type LoginFormData } from './login-form';
-import { form, FormField, validateStandardSchema } from '@angular/forms/signals';
+import {
+  form,
+  FormField,
+  validateStandardSchema,
+} from '@angular/forms/signals';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputPasswordModule } from 'primeng/inputpassword';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FieldError } from '../shared/field-error';
 import { PasswordInput } from '../shared/password-input';
 
 @Component({
@@ -18,23 +23,25 @@ import { PasswordInput } from '../shared/password-input';
     Check,
     FormField,
     FloatLabelModule,
-
     InputPasswordModule,
     IconFieldModule,
     InputIconModule,
     ButtonModule,
     RouterLink,
-    PasswordInput
-],
+    PasswordInput,
+    FieldError,
+  ],
   providers: [],
   templateUrl: './login.html',
 })
 export class Login {
+  private router = inject(Router);
+
   loginModel = signal<LoginFormData>({
-    email: "",
+    email: '',
     password: '',
   });
-  mask: boolean = true
+  mask: boolean = true;
 
   loginForm = form(this.loginModel, (path) => {
     validateStandardSchema(path, loginSchema);
@@ -49,7 +56,14 @@ export class Login {
   onSubmit(event: Event) {
     event?.preventDefault();
 
+    // Marca todos os campos como tocados para mostrar os erros de quem nem foi preenchido
+    this.loginForm().markAsTouched();
+    if (this.loginForm().invalid()) return;
+
     const credentials = this.loginModel();
     console.log(`Credentials: ${credentials.email}`);
+
+    //dev, apenas para demonstração, validação virá antes para criar sessão do usuário
+    this.router.navigate(['/home']);
   }
 }

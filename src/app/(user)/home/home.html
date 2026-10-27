@@ -1,0 +1,182 @@
+<app-sidebar>
+  <main class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-8 py-8 lg:px-12">
+    <div class="flex items-center justify-between gap-4">
+      <h1 class="text-3xl font-semibold tracking-tight text-ink">
+        Olá, {{ firstName }}
+      </h1>
+      <!-- dev: alterna entre o estado vazio e os dados de exemplo -->
+      <label class="flex items-center gap-2 text-sm text-subtle">
+        <p-toggleswitch
+          (onChange)="toggleSampleData($event)"
+          ariaLabel="Dados de exemplo"
+        />
+        Dados de exemplo
+      </label>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:h-64 lg:grid-cols-[4fr_3fr]">
+      <section
+        class="flex flex-col justify-between gap-8 rounded-2xl bg-ink p-8"
+      >
+        <div class="flex flex-col gap-3">
+          <h2 class="text-2xl font-semibold tracking-tight text-white">
+            Analisar para uma nova vaga
+          </h2>
+          <span class="max-w-xl leading-relaxed text-white/75">
+            Envie seu currículo principal para começar. Depois é só colar a
+            descrição da vaga.
+          </span>
+        </div>
+        <div class="flex items-center gap-6">
+          <button
+            pButton
+            [disabled]="!resume()"
+            routerLink="/new-analysis"
+            class="border-none! font-semibold!"
+            [class]="
+              resume()
+                ? 'bg-gold! text-ink! hover:bg-gold-deep!'
+                : 'bg-ink-soft! text-white/50! opacity-100!'
+            "
+          >
+            Nova análise
+          </button>
+          @if (!resume()) {
+          <span class="text-white/60">Requer currículo principal</span>
+          }
+        </div>
+      </section>
+
+      <section
+        class="flex flex-col gap-5 rounded-2xl border border-line bg-surface p-8"
+      >
+        <span
+          class="text-xs font-semibold uppercase tracking-[0.12em] text-gold-deep"
+        >
+          Currículo principal
+        </span>
+
+        @if (resume(); as resume) {
+        <div class="flex flex-1 items-center gap-4">
+          <div
+            class="flex size-12 shrink-0 items-center justify-center rounded-lg border border-line bg-danger-bg text-xs font-bold text-danger"
+          >
+            PDF
+          </div>
+          <div class="flex min-w-0 flex-col">
+            <span class="truncate font-medium text-ink"
+              >{{ resume.fileName }}</span
+            >
+            <span class="text-sm text-subtle"
+              >Atualizado em {{ resume.updatedAt | date: 'dd/MM/yyyy' }}</span
+            >
+          </div>
+        </div>
+
+        <div>
+          <a
+            pButton
+            routerLink="/resume"
+            severity="secondary"
+            outlined
+            class="border-line-strong! bg-surface! text-ink!"
+          >
+            Atualizar currículo
+          </a>
+        </div>
+        } @else {
+        <input
+          #fileInput
+          type="file"
+          accept="application/pdf"
+          class="hidden"
+          (change)="onFileSelected(fileInput)"
+        />
+        <button
+          type="button"
+          class="flex flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-4 text-center transition-colors"
+          [class]="dragging() ? 'border-gold bg-cream' : 'border-line-strong bg-field hover:border-gold'"
+          (click)="fileInput.click()"
+          (dragover)="onDragOver($event)"
+          (dragleave)="dragging.set(false)"
+          (drop)="onDrop($event)"
+        >
+          <span
+            class="flex size-10 items-center justify-center rounded-full bg-cream text-gold-deep"
+          >
+            <svg pIcon="arrow-up" [size]="16"></svg>
+          </span>
+          <span class="text-sm text-ink"
+            ><strong class="font-semibold">Arraste o PDF aqui</strong> ou clique
+            para escolher</span
+          >
+          @if (error()) {
+          <span class="text-sm text-danger">{{ error() }}</span>
+          } @else {
+          <span class="text-xs text-subtle">Somente PDF, até 5 MB</span>
+          }
+        </button>
+        }
+      </section>
+    </div>
+
+    <section class="flex flex-col gap-3">
+      <div class="flex items-baseline justify-between gap-4">
+        <h2 class="text-xl font-semibold tracking-tight text-ink">
+          Análises recentes
+        </h2>
+        @if (recentReviews().length) {
+        <a
+          routerLink="/history"
+          class="text-sm font-medium text-gold-deep hover:underline"
+          >Ver todas</a
+        >
+        }
+      </div>
+
+      @if (recentReviews().length) {
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+        @for (review of recentReviews(); track review.id) {
+        <article
+          class="flex h-52 flex-col gap-4 rounded-2xl border border-line bg-surface p-6"
+        >
+          <div class="flex items-center justify-between">
+            <span
+              class="flex size-12 items-center justify-center rounded-full font-heading text-lg font-semibold"
+              [class]="scoreClass(review.finalScore)"
+            >
+              {{ review.finalScore }}
+            </span>
+            <span class="text-sm text-subtle"
+              >{{ review.createdAt | date: 'dd/MM/yyyy' }}</span
+            >
+          </div>
+          @if (review.jobTitle) {
+          <span class="line-clamp-2 font-medium text-ink"
+            >{{ review.jobTitle }}</span
+          >
+          } @else {
+          <span class="italic text-subtle">Análise sem descrição de vaga</span>
+          }
+          <a
+            [routerLink]="['/history', review.id]"
+            class="mt-auto text-sm font-medium text-gold-deep hover:underline"
+          >
+            Ver relatório
+          </a>
+        </article>
+        }
+      </div>
+      } @else {
+      <div
+        class="flex h-52 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-surface px-6 text-center"
+      >
+        <span class="font-medium text-ink">Nenhuma análise ainda</span>
+        <span class="text-sm text-subtle"
+          >Seus relatórios vão aparecer aqui depois da primeira análise.</span
+        >
+      </div>
+      }
+    </section>
+  </main>
+</app-sidebar>

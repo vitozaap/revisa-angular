@@ -1,0 +1,80 @@
+<app-sidebar>
+  <main class="mx-auto flex w-full max-w-4xl flex-col gap-6 px-8 py-12">
+    <div class="flex flex-col gap-2">
+      <h1 class="text-3xl font-semibold tracking-tight text-ink">Meu currículo</h1>
+      <span class="text-muted">
+        Este é o currículo usado em todas as novas análises. Envie uma nova versão sempre que fizer
+        alterações.
+      </span>
+    </div>
+
+    @if (resume(); as resume) {
+      <section class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5">
+        <div
+          class="flex size-12 shrink-0 items-center justify-center rounded-lg border border-line bg-danger-bg text-xs font-bold text-danger"
+        >
+          PDF
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col gap-0.5">
+          <div class="flex items-center gap-2">
+            <span class="truncate font-medium text-ink">{{ resume.fileName }}</span>
+            <span
+              class="shrink-0 rounded bg-cream px-1.5 py-0.5 text-[0.625rem] font-semibold uppercase tracking-widest text-gold-dark"
+            >
+              Principal
+            </span>
+          </div>
+          <span class="text-sm text-subtle">
+            Enviado em {{ resume.createdAt | date: 'dd/MM/yyyy' }} · Atualizado em
+            {{ resume.updatedAt | date: 'dd/MM/yyyy' }}
+          </span>
+        </div>
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          outlined
+          class="shrink-0 border-line-strong! bg-surface! text-ink!"
+        >
+          Visualizar PDF
+        </button>
+      </section>
+    }
+
+    <section class="flex flex-col gap-3">
+      <h2 class="text-lg font-semibold text-ink">
+        {{ resume() ? 'Enviar nova versão' : 'Enviar currículo' }}
+      </h2>
+      <input
+        #fileInput
+        type="file"
+        accept="application/pdf"
+        class="hidden"
+        (change)="onFileSelected(fileInput)"
+      />
+      <button
+        type="button"
+        class="flex cursor-pointer flex-col items-center gap-3 rounded-2xl border-2 border-dashed px-6 py-14 text-center transition-colors"
+        [class]="dragging() ? 'border-gold bg-cream' : 'border-line-strong bg-field hover:border-gold'"
+        (click)="fileInput.click()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="dragging.set(false)"
+        (drop)="onDrop($event)"
+      >
+        <span class="flex size-12 items-center justify-center rounded-full bg-cream text-gold-deep">
+          <svg pIcon="arrow-up" [size]="18"></svg>
+        </span>
+        <span class="text-ink"><strong class="font-semibold">Arraste o PDF aqui</strong> ou clique para escolher</span>
+        <span class="text-sm text-subtle">Somente PDF, até 5 MB</span>
+        @if (error()) {
+          <span class="text-sm text-danger">{{ error() }}</span>
+        }
+      </button>
+    </section>
+
+    <div class="rounded-2xl bg-cream px-6 py-4 text-sm leading-relaxed text-ink-soft">
+      A nova versão substitui a atual e passa a ser usada nas próximas análises. Os relatórios
+      anteriores continuam salvos em Minhas análises.
+    </div>
+  </main>
+</app-sidebar>
