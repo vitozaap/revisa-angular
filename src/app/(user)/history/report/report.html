@@ -48,16 +48,17 @@
             <span class="rounded-full px-3 py-1 text-sm font-semibold" [class]="tone().badge">
               {{ tone().label }}
             </span>
+            <p class="m-0 text-sm leading-relaxed text-muted">{{ review.feedbackDescription }}</p>
           </section>
 
           <section class="flex flex-1 flex-col gap-4 rounded-2xl border border-line bg-surface p-6">
-            @if (review.descriptionScore !== null) {
+            @if (review.jobAdherenceScore !== null) {
               <div class="flex items-center justify-between">
                 <h2 class="font-semibold text-ink">Aderência à vaga</h2>
-                <span class="font-heading text-xl font-semibold text-ink">{{ review.descriptionScore }}%</span>
+                <span class="font-heading text-xl font-semibold text-ink">{{ review.jobAdherenceScore }}%</span>
               </div>
               <div class="h-1.5 overflow-hidden rounded-full bg-track">
-                <div class="h-full rounded-full bg-gold" [style.width.%]="review.descriptionScore"></div>
+                <div class="h-full rounded-full bg-gold" [style.width.%]="review.jobAdherenceScore"></div>
               </div>
 
               @if (review.attendedRequirements.length) {
@@ -105,7 +106,7 @@
                 Pontos fortes
               </h2>
               <ul class="flex flex-col gap-3 text-sm text-ink-soft">
-                @for (point of review.strongPoints; track point) {
+                @for (point of review.strengths; track point) {
                   <li class="flex gap-2"><span class="text-success">–</span>{{ point }}</li>
                 }
               </ul>
@@ -121,7 +122,7 @@
                 Pontos a melhorar
               </h2>
               <ul class="flex flex-col gap-3 text-sm text-ink-soft">
-                @for (point of review.weakPoints; track point) {
+                @for (point of review.weaknesses; track point) {
                   <li class="flex gap-2"><span class="text-gold">–</span>{{ point }}</li>
                 }
               </ul>

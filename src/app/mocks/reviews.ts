@@ -35,12 +35,12 @@ export const REVIEWS: Review[] = [
     resumeId: 3,
     jobDescription: 'Vaga de desenvolvedor front-end júnior com React e TypeScript...',
     jobTitle: 'Desenvolvedor(a) Front-end Júnior — Nuvemtech',
-    strongPoints: [
+    strengths: [
       'Formação e cursos bem posicionados no topo da página.',
       'Projeto acadêmico com link do repositório no GitHub.',
       'Uma página só, na ordem esperada para vagas de estágio.',
     ],
-    weakPoints: [
+    weaknesses: [
       'Nenhum resultado medido: inclua números nas experiências.',
       'Resumo profissional genérico, sem a área de interesse.',
       'Habilidades em lista longa, sem separar nível de domínio.',
@@ -54,8 +54,11 @@ export const REVIEWS: Review[] = [
     attendedRequirements: ['HTML e CSS', 'JavaScript', 'Git', 'React'],
     notAttendedRequirements: ['Testes', 'Acessibilidade', 'TypeScript'],
     finalScore: 72,
-    resumeScore: 75,
-    descriptionScore: 68,
+    feedbackTitle: 'GOOD_WITH_ADJUSTMENTS',
+    feedbackDescription:
+      'Seu currículo está bem estruturado, mas as experiências descrevem tarefas em vez de resultados.',
+    resumeScore: 76,
+    jobAdherenceScore: 68,
     createdAt: new Date(2026, 7, 30, 14, 12),
   },
   {
@@ -63,17 +66,20 @@ export const REVIEWS: Review[] = [
     resumeId: 2,
     jobDescription: 'Vaga de analista de suporte júnior...',
     jobTitle: 'Analista de Suporte Júnior — Datacorp',
-    strongPoints: [
+    strengths: [
       'Experiência com atendimento descrita com clareza.',
       'Certificações relevantes para a área de suporte.',
     ],
-    weakPoints: ['Faltam ferramentas de chamados usadas no dia a dia.'],
+    weaknesses: ['Faltam ferramentas de chamados usadas no dia a dia.'],
     formattingErrors: [{ original: 'suporte tecnico', suggestion: 'suporte técnico' }],
     attendedRequirements: ['Atendimento ao cliente', 'Windows', 'Redes'],
     notAttendedRequirements: ['ITIL'],
     finalScore: 81,
+    feedbackTitle: 'EXCELLENT',
+    feedbackDescription:
+      'Currículo claro e alinhado à vaga; faltam só detalhes sobre as ferramentas do dia a dia.',
     resumeScore: 78,
-    descriptionScore: 84,
+    jobAdherenceScore: 84,
     createdAt: new Date(2026, 7, 22, 9, 40),
   },
   {
@@ -81,8 +87,8 @@ export const REVIEWS: Review[] = [
     resumeId: 2,
     jobDescription: 'Estágio em desenvolvimento web...',
     jobTitle: 'Estágio em Desenvolvimento Web — Órbita Digital',
-    strongPoints: ['Projetos pessoais com tecnologias pedidas na vaga.'],
-    weakPoints: [
+    strengths: ['Projetos pessoais com tecnologias pedidas na vaga.'],
+    weaknesses: [
       'Objetivo profissional não cita a área de desenvolvimento web.',
       'Datas das experiências em formatos diferentes.',
     ],
@@ -90,8 +96,11 @@ export const REVIEWS: Review[] = [
     attendedRequirements: ['HTML e CSS', 'JavaScript'],
     notAttendedRequirements: ['Git', 'Inglês intermediário'],
     finalScore: 64,
-    resumeScore: 66,
-    descriptionScore: 61,
+    feedbackTitle: 'GOOD_WITH_ADJUSTMENTS',
+    feedbackDescription:
+      'Os projetos combinam com a vaga, mas o objetivo e as datas precisam de ajustes.',
+    resumeScore: 67,
+    jobAdherenceScore: 61,
     createdAt: new Date(2026, 7, 11, 19, 5),
   },
   {
@@ -99,8 +108,8 @@ export const REVIEWS: Review[] = [
     resumeId: 1,
     jobDescription: null,
     jobTitle: null,
-    strongPoints: ['Informações de contato completas e fáceis de achar.'],
-    weakPoints: [
+    strengths: ['Informações de contato completas e fáceis de achar.'],
+    weaknesses: [
       'Experiências sem descrição do que foi feito.',
       'Currículo com duas páginas para pouca experiência.',
     ],
@@ -111,8 +120,11 @@ export const REVIEWS: Review[] = [
     attendedRequirements: [],
     notAttendedRequirements: [],
     finalScore: 58,
+    feedbackTitle: 'NEEDS_ATTENTION',
+    feedbackDescription:
+      'As experiências não explicam o que foi feito e o currículo está longo para o seu momento.',
     resumeScore: 58,
-    descriptionScore: null,
+    jobAdherenceScore: null,
     createdAt: new Date(2026, 7, 3, 16, 28),
   },
 ];
