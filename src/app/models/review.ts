@@ -1,10 +1,8 @@
+// Cada envio é uma versão nova, então só tem a data de envio
 export interface Resume {
   id: number;
-  path: string;
   fileName: string;
-  userId: number;
-  createdAt: Date;
-  updatedAt: Date;
+  uploadedAt: string; // ISO, sem fuso
 }
 
 export interface FormattingError {
@@ -12,13 +10,20 @@ export interface FormattingError {
   suggestion: string;
 }
 
-// Calculado pelo back a partir da finalScore (75+, 60–74, abaixo de 60)
-export type FeedbackTitle = 'EXCELLENT' | 'GOOD_WITH_ADJUSTMENTS' | 'NEEDS_ATTENTION';
+// Calculado pelo back a partir da finalScore: 90+, 75–89, 60–74, 40–59 e abaixo de 40
+export type FeedbackTitle =
+  | 'EXCELLENT'
+  | 'VERY_GOOD'
+  | 'GOOD_WITH_ADJUSTMENTS'
+  | 'NEEDS_ATTENTION'
+  | 'INSUFFICIENT';
 
-//Cópia dos campos da tabela para usar
+// campos da tabela review p mostrar
 export interface Review {
   id: number;
   resumeId: number;
+  // Nome do currículo analisado, p mostrar no histórico
+  fileName: string;
   jobDescription: string | null;
   jobTitle: string | null;
   weaknesses: string[];
@@ -32,5 +37,5 @@ export interface Review {
   jobAdherenceScore: number | null;
   feedbackTitle: FeedbackTitle;
   feedbackDescription: string;
-  createdAt: Date;
+  createdAt: string; // ISO, sem fuso
 }

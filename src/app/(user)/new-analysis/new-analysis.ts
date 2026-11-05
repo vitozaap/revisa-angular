@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import { RESUMES, REVIEWS } from '../../mocks/reviews';
+import type { Resume } from '../../models/review';
 import { AppSidebar } from '../../sidebar/sidebar';
 import {
   JOB_DESCRIPTION_MAX_LENGTH,
@@ -30,8 +30,8 @@ import {
 export class NewAnalysis {
   private router = inject(Router);
 
-  // Currículo mais recente do usuário (dados de exemplo enquanto não está integrado ao back)
-  resume = RESUMES[0];
+  // Currículo mais recente do usuário, null enquanto não vem do back
+  resume = signal<Resume | null>(null);
   maxLength = JOB_DESCRIPTION_MAX_LENGTH;
 
   newAnalysisModel = signal<NewAnalysisFormData>({
@@ -55,9 +55,8 @@ export class NewAnalysis {
     if (this.newAnalysisForm().invalid()) return;
 
     const analysis = this.newAnalysisModel();
-    console.log({ resumeId: this.resume.id, ...analysis });
+    console.log(analysis);
 
-    //dev, apenas para demonstração, depois vai abrir o relatório criado pelo back
-    this.router.navigate(['/history', REVIEWS[0].id]);
+    //dev, falta criar a análise no back e abrir o relatório dela
   }
 }

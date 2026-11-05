@@ -51,7 +51,6 @@ export const RevisaPreset = definePreset(Aura, {
         },
       },
     },
-    // Tamanhos (padding, fonte) ficam no padrão do PrimeNG; só os inputs são maiores (ver components)
     formField: {
       borderRadius: '0.625rem',
     },
@@ -63,7 +62,6 @@ export const RevisaPreset = definePreset(Aura, {
     },
   },
   components: {
-    // Inputs mais altos que o padrão; botões e o resto seguem o tamanho padrão do PrimeNG
     inputtext: {
       root: {
         paddingX: '1rem',
@@ -71,7 +69,6 @@ export const RevisaPreset = definePreset(Aura, {
         fontSize: '1rem',
       },
     },
-    // Só o tamanho "large" (usado nos botões do login e cadastro) acompanha a altura dos inputs
     button: {
       root: {
         lg: {

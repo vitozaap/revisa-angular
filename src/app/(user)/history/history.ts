@@ -7,16 +7,8 @@ import { ConfirmationService, type MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { type Menu, MenuModule } from 'primeng/menu';
-import { RESUMES, REVIEWS } from '../../mocks/reviews';
+import type { Review } from '../../models/review';
 import { AppSidebar } from '../../sidebar/sidebar';
-
-interface Analysis {
-  id: number;
-  fileName: string;
-  jobTitle: string | null;
-  score: number;
-  createdAt: Date;
-}
 
 type Filter = 'all' | 'with-job' | 'without-job';
 
@@ -45,19 +37,11 @@ export class History {
   ];
   filter = signal<Filter>('all');
 
-  // Monta a lista a partir dos dados de exemplo (Review + Resume) enquanto não está integrado ao back
-  analyses = signal<Analysis[]>(
-    REVIEWS.map((review) => ({
-      id: review.id,
-      fileName: RESUMES.find((resume) => resume.id === review.resumeId)?.fileName ?? '',
-      jobTitle: review.jobTitle,
-      score: review.finalScore,
-      createdAt: review.createdAt,
-    })),
-  );
+  // Vazia enquanto não vem do back
+  analyses = signal<Review[]>([]);
 
   // aqui retorna o maior valor usando .max() entre as analises, mapeando pelo score
-  bestScore = computed(() => Math.max(...this.analyses().map((analysis) => analysis.score)));
+  bestScore = computed(() => Math.max(...this.analyses().map((analysis) => analysis.finalScore)));
 
   // so pega o id da primeira da array
   latestId = computed(() => this.analyses()[0]?.id);
@@ -82,7 +66,7 @@ export class History {
   }
 
   // Análise do menu de ações aberto (o menu é um só, compartilhado entre os itens da lista)
-  private selectedAnalysis: Analysis | null = null;
+  private selectedAnalysis: Review | null = null;
 
   actionItems: MenuItem[] = [
     {
@@ -95,7 +79,7 @@ export class History {
     },
   ];
 
-  openActions(event: Event, analysis: Analysis, menu: Menu) {
+  openActions(event: Event, analysis: Review, menu: Menu) {
     this.selectedAnalysis = analysis;
     menu.toggle(event);
   }

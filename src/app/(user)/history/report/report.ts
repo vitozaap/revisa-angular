@@ -1,17 +1,19 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonModule } from 'primeng/button';
-import { RESUMES, REVIEWS } from '../../../mocks/reviews';
-import type { FeedbackTitle } from '../../../models/review';
+import type { FeedbackTitle, Review } from '../../../models/review';
 import { AppSidebar } from '../../../sidebar/sidebar';
 
 
 const FEEDBACK_TONES: Record<FeedbackTitle, { label: string; stroke: string; badge: string }> = {
-  EXCELLENT: { label: 'Muito bom', stroke: 'stroke-success', badge: 'bg-success-bg text-success-ink' },
+  // Por enquanto as 5 faixas usam as 3 cores que já existem
+  EXCELLENT: { label: 'Excelente', stroke: 'stroke-success', badge: 'bg-success-bg text-success-ink' },
+  VERY_GOOD: { label: 'Muito bom', stroke: 'stroke-success', badge: 'bg-success-bg text-success-ink' },
   GOOD_WITH_ADJUSTMENTS: { label: 'Bom, com ajustes', stroke: 'stroke-gold', badge: 'bg-cream text-gold-dark' },
   NEEDS_ATTENTION: { label: 'Precisa de atenção', stroke: 'stroke-danger', badge: 'bg-danger-bg text-danger-ink' },
+  INSUFFICIENT: { label: 'Insuficiente', stroke: 'stroke-danger', badge: 'bg-danger-bg text-danger-ink' },
 };
 
 // Constantes que definem tamanho da circunferencia do score total
@@ -24,13 +26,11 @@ const SCORE_CIRCUMFERENCE = 2 * Math.PI * SCORE_RADIUS;
   templateUrl: './report.html',
 })
 export class Report {
-  // Vem do parâmetro :id da rota (withComponentInputBinding)
+  // Vem do parâmetro :id da rota withComponentInputBinding
   id = input.required<string>();
 
-  // Mockado por enquanto, usa .find para buscar o id e bater com o id que chega dos parâmetros da rota
-  review = computed(() => REVIEWS.find((review) => review.id === Number(this.id())));
-  //Mesma coisa rsrs
-  resume = computed(() => RESUMES.find((resume) => resume.id === this.review()?.resumeId));
+  // null enquanto não vem do back (buscar pelo id da rota)
+  review = signal<Review | null>(null);
 
   scoreRadius = SCORE_RADIUS;
   scoreCircumference = SCORE_CIRCUMFERENCE;
@@ -39,6 +39,6 @@ export class Report {
   );
 
   // Usei IA para me ajudar a como gerar a circunferencia do score
-  // O título vem do back (feedbackTitle); aqui só ficam o texto em português e as cores de cada valor
+  // O título vem do back (escrito la como funciona) aqui somente texto em português e as cores de cada valor
   tone = computed(() => FEEDBACK_TONES[this.review()?.feedbackTitle ?? 'NEEDS_ATTENTION']);
 }

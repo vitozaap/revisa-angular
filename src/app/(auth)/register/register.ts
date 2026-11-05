@@ -45,7 +45,7 @@ export class Register {
   onSubmit(event: Event) {
     event?.preventDefault();
 
-    // Marca todos os campos como tocados para mostrar os erros de quem nem foi preenchido
+    // Marca todos os campos como mexidos p mostrar os erros de quem nem foi preenchido
     this.registerForm().markAsTouched();
     if (this.registerForm().invalid()) return;
 

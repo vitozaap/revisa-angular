@@ -4,14 +4,6 @@
       <h1 class="text-3xl font-semibold tracking-tight text-ink">
         Olá, {{ firstName }}
       </h1>
-      <!-- dev: alterna entre o estado vazio e os dados de exemplo -->
-      <label class="flex items-center gap-2 text-sm text-subtle">
-        <p-toggleswitch
-          (onChange)="toggleSampleData($event)"
-          ariaLabel="Dados de exemplo"
-        />
-        Dados de exemplo
-      </label>
     </div>
 
     <div class="grid grid-cols-1 gap-6 lg:h-64 lg:grid-cols-[4fr_3fr]">
@@ -68,7 +60,7 @@
               >{{ resume.fileName }}</span
             >
             <span class="text-sm text-subtle"
-              >Atualizado em {{ resume.updatedAt | date: 'dd/MM/yyyy' }}</span
+              >Atualizado em {{ resume.uploadedAt | date: 'dd/MM/yyyy' }}</span
             >
           </div>
         </div>

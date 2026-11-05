@@ -1,16 +1,19 @@
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideSignalFormsConfig } from '@angular/forms/signals';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { credentialsInterceptor } from './credentials.interceptor';
 import { RevisaPreset } from './revisa-preset';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    // Marca os campos ainda não tocados, para o vermelho de erro só aparecer depois (ver styles.css)
+    provideHttpClient(withInterceptors([credentialsInterceptor])),
+    // Marca os campos ainda não mexidos, para o vermelho de erro só aparecer dps
     provideSignalFormsConfig({
       classes: { 'field-untouched': (field) => !field.state().touched() },
     }),

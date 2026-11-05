@@ -34,10 +34,10 @@ export class AppSidebar {
   sidebarId = 'app-sidebar';
 
   userName = 'Victor Santos';
-  // dev, e-mail de exemplo enquanto não há sessão do usuário
+  // dev, email de exemplo enquanto não há sessão do usuário
   userEmail = 'victor.santos@email.com';
 
-  // O e-mail vira o cabeçalho do grupo, no estilo padrão do p-menu
+  // O e-mail vira o cabeçalho do grupo, no estilo padrão do p-menu da lib 
   userMenuItems: MenuItem[] = [
     {
       label: this.userEmail,
@@ -49,7 +49,7 @@ export class AppSidebar {
           // Mesmo padrão do item "Delete" nos exemplos de menu das docs do PrimeNG
           linkClass:
             'text-red-500! dark:text-red-400! [&_.p-menu-item-icon]:text-red-500! dark:[&_.p-menu-item-icon]:text-red-400!',
-          //dev, por enquanto só volta para o login; depois vai encerrar a sessão no back
+          //dev, por enquanto só volta para o login; depois vai matar sessão no back
           command: () => this.router.navigate(['/login']),
         },
       ],
@@ -73,6 +73,7 @@ export class AppSidebar {
     },
   ];
 
+  // tava pecando mt para colocar o botão na direita, lib falha nesse quesito, tive que apelar
   // O p-menu sempre alinha pela esquerda do botão; aqui ele é movido para terminar na ponta direita do botão.
   // Com a sidebar colapsada o botão é menor que o menu, então fica a posição padrão.
   alignToButtonEnd(menu: Menu) {
@@ -83,7 +84,7 @@ export class AppSidebar {
   }
 
   get initials() {
-    // Pedi para IA para me ajudar com essa, serve apenas para pegar as inicias do nome para gerar o avatar
+    // Pedi para IA para me ajudar com essa, serve apenas para pegar as inicias do nome para gerar o avatarzinho
     return this.userName
       .split(' ')
       .map((part) => part[0])

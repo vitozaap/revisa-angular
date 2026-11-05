@@ -2,7 +2,6 @@ import { DatePipe } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonModule } from 'primeng/button';
-import { RESUMES } from '../../mocks/reviews';
 import type { Resume } from '../../models/review';
 import { AppSidebar } from '../../sidebar/sidebar';
 import { validateResumeFile } from '../../utils/resume-file';
@@ -13,8 +12,8 @@ import { validateResumeFile } from '../../utils/resume-file';
   templateUrl: './resume.html',
 })
 export class ResumePage {
-  // Currículo principal (dados de exemplo enquanto não está integrado ao back). Use null para ver o estado vazio.
-  resume = signal<Resume | null>(RESUMES[0]);
+  // Currículo principal, null enquanto não vem do back (mostra o estado vazio)
+  resume = signal<Resume | null>(null);
   error = signal('');
   dragging = signal(false);
 
@@ -41,15 +40,6 @@ export class ResumePage {
     this.error.set(error ?? '');
     if (error) return;
 
-    //dev, apenas para demonstração, depois o arquivo vai ser enviado para o back
-    const now = new Date();
-    this.resume.update((current) => ({
-      id: current?.id ?? 1,
-      path: current?.path ?? '',
-      userId: current?.userId ?? 1,
-      fileName: file.name,
-      createdAt: current?.createdAt ?? now,
-      updatedAt: now,
-    }));
+    //dev, falta enviar o arquivo para o back
   }
 }
