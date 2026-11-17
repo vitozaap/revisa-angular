@@ -1,89 +1,104 @@
 <app-sidebar>
   <main class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-8 py-8 lg:grid-cols-[1fr_20rem] lg:px-12">
-    <form (submit)="onSubmit($event)" class="flex flex-col gap-5">
-      <h1 class="text-3xl font-semibold tracking-tight text-ink">Nova análise</h1>
+    @if (loading()) {
+      <div class="flex flex-col gap-5">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink">Nova análise</h1>
+        <analysis-loading />
+      </div>
+    } @else {
+      <form (submit)="onSubmit($event)" class="flex flex-col gap-5">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink">Nova análise</h1>
 
-      @if (resume(); as resume) {
-        <section class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5">
-          <div
-            class="flex size-12 shrink-0 items-center justify-center rounded-lg border border-line bg-danger-bg text-xs font-bold text-danger"
-          >
-            PDF
+        @if (resume(); as resume) {
+          <section class="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5">
+            <div
+              class="flex size-12 shrink-0 items-center justify-center rounded-lg border border-line bg-danger-bg text-xs font-bold text-danger"
+            >
+              PDF
+            </div>
+            <div class="flex min-w-0 flex-1 flex-col">
+              <span class="text-xs font-semibold uppercase tracking-[0.12em] text-gold-deep">Currículo principal</span>
+              <span class="truncate font-medium text-ink">{{ resume.fileName }}</span>
+              <span class="text-sm text-subtle">Atualizado em {{ resume.uploadedAt | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <a
+              pButton
+              routerLink="/resume"
+              severity="secondary"
+              outlined
+              class="shrink-0 border-line-strong! bg-surface! text-ink!"
+            >
+              Atualizar currículo
+            </a>
+          </section>
+        } @else {
+          <p-message severity="warn">
+            Envie seu currículo em <a routerLink="/resume" class="font-semibold underline">Meu currículo</a> antes de fazer uma análise.
+          </p-message>
+        }
+
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1">
+            <h2 class="text-lg font-semibold text-ink">Vaga</h2>
+            <span class="text-sm text-muted">Opcional, mas deixa a nota mais precisa.</span>
           </div>
-          <div class="flex min-w-0 flex-1 flex-col">
-            <span class="text-xs font-semibold uppercase tracking-[0.12em] text-gold-deep">Currículo principal</span>
-            <span class="truncate font-medium text-ink">{{ resume.fileName }}</span>
-            <span class="text-sm text-subtle">Atualizado em {{ resume.uploadedAt | date: 'dd/MM/yyyy' }}</span>
+
+          @let title = newAnalysisForm.jobTitle();
+          @let description = newAnalysisForm.jobDescription();
+          <div class="flex flex-col gap-1">
+            <p-floatlabel variant="on">
+              <input pInputText type="text" [formField]="newAnalysisForm.jobTitle" id="jobTitle" class="w-full" />
+              <label for="jobTitle">Título da vaga</label>
+            </p-floatlabel>
+            @if (title.touched() && title.errors()[0]; as error) {
+              <span class="text-xs text-danger">{{ error.message }}</span>
+            } @else {
+              <span class="text-xs text-subtle">Ex.: Desenvolvedor(a) Front-end Júnior — Nuvemtech</span>
+            }
           </div>
+
+          <div class="flex flex-col gap-1">
+            <p-floatlabel variant="on">
+              <textarea
+                pTextarea
+                [formField]="newAnalysisForm.jobDescription"
+                id="jobDescription"
+                rows="9"
+                class="w-full resize-none leading-relaxed"
+              ></textarea>
+              <label for="jobDescription">Descrição da vaga</label>
+            </p-floatlabel>
+            <div class="flex justify-between gap-4 text-xs">
+              @if (description.errors()[0]; as error) {
+                <span class="text-danger">{{ error.message }}</span>
+              } @else {
+                <span class="text-subtle">Cole a descrição com requisitos e atividades.</span>
+              }
+              <span [class]="description.invalid() ? 'text-danger' : 'text-subtle'">
+                {{ description.value().length }} / {{ maxLength }} caracteres
+              </span>
+            </div>
+          </div>
+        </div>
+
+        @if (error()) {
+          <p-message severity="error">{{ error() }}</p-message>
+        }
+
+        <div class="flex items-center gap-4">
           <button
             pButton
-            type="button"
-            severity="secondary"
-            outlined
-            class="shrink-0 border-line-strong! bg-surface! text-ink!"
+            type="submit"
+            severity="contrast"
+            class="font-semibold!"
+            [disabled]="newAnalysisForm().invalid() || !resume()"
           >
-            Atualizar currículo
+            Analisar currículo
           </button>
-        </section>
-      }
-
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-col gap-1">
-          <h2 class="text-lg font-semibold text-ink">Vaga</h2>
-          <span class="text-sm text-muted">Opcional, mas deixa a nota mais precisa.</span>
+          <span class="text-sm text-subtle">A análise leva cerca de 20 segundos.</span>
         </div>
-
-        @let title = newAnalysisForm.jobTitle();
-        @let description = newAnalysisForm.jobDescription();
-        <div class="flex flex-col gap-1">
-          <p-floatlabel variant="on">
-            <input pInputText type="text" [formField]="newAnalysisForm.jobTitle" id="jobTitle" class="w-full" />
-            <label for="jobTitle">Título da vaga</label>
-          </p-floatlabel>
-          @if (title.touched() && title.errors()[0]; as error) {
-            <span class="text-xs text-danger">{{ error.message }}</span>
-          } @else {
-            <span class="text-xs text-subtle">Ex.: Desenvolvedor(a) Front-end Júnior — Nuvemtech</span>
-          }
-        </div>
-
-        <div class="flex flex-col gap-1">
-          <p-floatlabel variant="on">
-            <textarea
-              pTextarea
-              [formField]="newAnalysisForm.jobDescription"
-              id="jobDescription"
-              rows="9"
-              class="w-full resize-none leading-relaxed"
-            ></textarea>
-            <label for="jobDescription">Descrição da vaga</label>
-          </p-floatlabel>
-          <div class="flex justify-between gap-4 text-xs">
-            @if (description.errors()[0]; as error) {
-              <span class="text-danger">{{ error.message }}</span>
-            } @else {
-              <span class="text-subtle">Cole a descrição com requisitos e atividades.</span>
-            }
-            <span [class]="description.invalid() ? 'text-danger' : 'text-subtle'">
-              {{ description.value().length }} / {{ maxLength }} caracteres
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <button
-          pButton
-          type="submit"
-          severity="contrast"
-          class="font-semibold!"
-          [disabled]="newAnalysisForm().invalid()"
-        >
-          Analisar currículo
-        </button>
-        <span class="text-sm text-subtle">A análise leva cerca de 20 segundos.</span>
-      </div>
-    </form>
+      </form>
+    }
 
     <aside class="flex flex-col gap-5 lg:pt-14">
       <section class="flex flex-col gap-3 rounded-2xl bg-cream p-6">

@@ -12,9 +12,11 @@ import { InputPasswordModule } from 'primeng/inputpassword';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
 import { Router, RouterLink } from '@angular/router';
 import { FieldError } from '../shared/field-error';
 import { PasswordInput } from '../shared/password-input';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'login',
@@ -27,6 +29,7 @@ import { PasswordInput } from '../shared/password-input';
     IconFieldModule,
     InputIconModule,
     ButtonModule,
+    MessageModule,
     RouterLink,
     PasswordInput,
     FieldError,
@@ -36,12 +39,15 @@ import { PasswordInput } from '../shared/password-input';
 })
 export class Login {
   private router = inject(Router);
+  private userService = inject(UserService);
 
   loginModel = signal<LoginFormData>({
     email: '',
     password: '',
   });
   mask: boolean = true;
+  loading = signal(false);
+  error = signal('');
 
   loginForm = form(this.loginModel, (path) => {
     validateStandardSchema(path, loginSchema);
@@ -60,10 +66,15 @@ export class Login {
     this.loginForm().markAsTouched();
     if (this.loginForm().invalid()) return;
 
-    const credentials = this.loginModel();
-    console.log(`Credentials: ${credentials.email}`);
+    this.loading.set(true);
+    this.error.set('');
 
-    //dev, apenas para demonstração, validação virá antes para criar sessão do usuário
-    this.router.navigate(['/home']);
+    this.userService.login(this.loginModel()).subscribe({
+      next: () => this.router.navigate(['/home']),
+      error: () => {
+        this.loading.set(false);
+        this.error.set('E-mail ou senha incorretos.');
+      },
+    });
   }
 }

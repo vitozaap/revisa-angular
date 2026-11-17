@@ -53,7 +53,12 @@
                         </div>
                         <field-error [field]="registerForm.termsAndPrivacy" />
                     </div>
-                    <button pButton severity="contrast" size="large" type="submit">Crie minha conta</button>
+                    @if (error()) {
+                        <p-message severity="error">{{ error() }}</p-message>
+                    }
+                    <button pButton severity="contrast" size="large" type="submit" [disabled]="loading()">
+                        {{ loading() ? 'Criando conta...' : 'Crie minha conta' }}
+                    </button>
                 </form>
             </div>
             <div class="flex w-full items-center justify-center">

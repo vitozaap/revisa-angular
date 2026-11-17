@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { type Menu, MenuModule } from 'primeng/menu';
 import type { Review } from '../../models/review';
+import { ReviewService } from '../../services/review.service';
 import { AppSidebar } from '../../sidebar/sidebar';
 
 type Filter = 'all' | 'with-job' | 'without-job';
@@ -29,6 +30,7 @@ type Filter = 'all' | 'with-job' | 'without-job';
 })
 export class History {
   private confirmationService = inject(ConfirmationService);
+  private reviewService = inject(ReviewService);
 
   filters: { label: string; value: Filter }[] = [
     { label: 'Todas', value: 'all' },
@@ -37,8 +39,12 @@ export class History {
   ];
   filter = signal<Filter>('all');
 
-  // Vazia enquanto não vem do back
   analyses = signal<Review[]>([]);
+
+  constructor() {
+    // Já vem da mais recente para a mais antiga
+    this.reviewService.list().subscribe((reviews) => this.analyses.set(reviews));
+  }
 
   // aqui retorna o maior valor usando .max() entre as analises, mapeando pelo score
   bestScore = computed(() => Math.max(...this.analyses().map((analysis) => analysis.finalScore)));
@@ -101,8 +107,11 @@ export class History {
         label: 'Excluir',
         severity: 'danger',
       },
-      //dev, por enquanto só remove da lista; depois vai chamar o back para excluir
-      accept: () => this.analyses.update((list) => list.filter((item) => item.id !== analysis.id)),
+      // Exclui no back e depois tira da lista
+      accept: () =>
+        this.reviewService
+          .delete(analysis.id)
+          .subscribe(() => this.analyses.update((list) => list.filter((item) => item.id !== analysis.id))),
     });
   }
 }

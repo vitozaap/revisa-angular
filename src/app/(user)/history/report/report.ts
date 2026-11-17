@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, type OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonModule } from 'primeng/button';
 import type { FeedbackTitle, Review } from '../../../models/review';
+import { ReviewService } from '../../../services/review.service';
 import { AppSidebar } from '../../../sidebar/sidebar';
 
 
@@ -25,12 +26,26 @@ const SCORE_CIRCUMFERENCE = 2 * Math.PI * SCORE_RADIUS;
   selector: 'report',
   templateUrl: './report.html',
 })
-export class Report {
+export class Report implements OnInit {
+  private reviewService = inject(ReviewService);
+
   // Vem do parâmetro :id da rota withComponentInputBinding
   id = input.required<string>();
 
-  // null enquanto não vem do back (buscar pelo id da rota)
   review = signal<Review | null>(null);
+  // Enquanto carrega não mostra o "não encontrado"
+  loading = signal(true);
+
+  // No constructor o input id ainda não chegou, por isso busca no ngOnInit
+  ngOnInit() {
+    this.reviewService.get(Number(this.id())).subscribe({
+      next: (review) => {
+        this.review.set(review);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
+  }
 
   scoreRadius = SCORE_RADIUS;
   scoreCircumference = SCORE_CIRCUMFERENCE;

@@ -1,8 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { ButtonModule } from 'primeng/button';
+import { finalize } from 'rxjs';
 import type { Resume } from '../../models/review';
+import { ResumeService } from '../../services/resume.service';
 import { AppSidebar } from '../../sidebar/sidebar';
 import { validateResumeFile } from '../../utils/resume-file';
 
@@ -12,10 +14,18 @@ import { validateResumeFile } from '../../utils/resume-file';
   templateUrl: './resume.html',
 })
 export class ResumePage {
-  // Currículo principal, null enquanto não vem do back (mostra o estado vazio)
+  private resumeService = inject(ResumeService);
+
+  // Currículo principal, null se o usuário ainda não enviou (mostra o estado vazio)
   resume = signal<Resume | null>(null);
   error = signal('');
   dragging = signal(false);
+  uploading = signal(false);
+
+  constructor() {
+    // Se der erro (404 = ainda não enviou), fica null e mostra o envio
+    this.resumeService.getCurrent().subscribe((resume) => this.resume.set(resume));
+  }
 
   onFileSelected(input: HTMLInputElement) {
     const file = input.files?.[0];
@@ -36,10 +46,19 @@ export class ResumePage {
   }
 
   private upload(file: File) {
+    if (this.uploading()) return;
+
     const error = validateResumeFile(file);
     this.error.set(error ?? '');
     if (error) return;
 
-    //dev, falta enviar o arquivo para o back
+    this.uploading.set(true);
+    this.resumeService
+      .upload(file)
+      .pipe(finalize(() => this.uploading.set(false)))
+      .subscribe({
+        next: (resume) => this.resume.set(resume),
+        error: () => this.error.set('Não foi possível enviar o currículo.'),
+      });
   }
 }

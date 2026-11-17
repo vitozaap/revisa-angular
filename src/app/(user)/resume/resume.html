@@ -55,6 +55,7 @@
         type="button"
         class="flex cursor-pointer flex-col items-center gap-3 rounded-2xl border-2 border-dashed px-6 py-14 text-center transition-colors"
         [class]="dragging() ? 'border-gold bg-cream' : 'border-line-strong bg-field hover:border-gold'"
+        [disabled]="uploading()"
         (click)="fileInput.click()"
         (dragover)="onDragOver($event)"
         (dragleave)="dragging.set(false)"
@@ -63,7 +64,11 @@
         <span class="flex size-12 items-center justify-center rounded-full bg-cream text-gold-deep">
           <svg pIcon="arrow-up" [size]="18"></svg>
         </span>
-        <span class="text-ink"><strong class="font-semibold">Arraste o PDF aqui</strong> ou clique para escolher</span>
+        @if (uploading()) {
+          <span class="text-ink">Enviando currículo...</span>
+        } @else {
+          <span class="text-ink"><strong class="font-semibold">Arraste o PDF aqui</strong> ou clique para escolher</span>
+        }
         <span class="text-sm text-subtle">Somente PDF, até 5 MB</span>
         @if (error()) {
           <span class="text-sm text-danger">{{ error() }}</span>

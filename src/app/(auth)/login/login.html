@@ -32,7 +32,12 @@
                         <field-error [field]="loginForm.email" />
                     </div>
                     <password-input [field]="loginForm.password" />
-                    <button pButton severity="contrast" size="large" type="submit">Entrar</button>
+                    @if (error()) {
+                        <p-message severity="error">{{ error() }}</p-message>
+                    }
+                    <button pButton severity="contrast" size="large" type="submit" [disabled]="loading()">
+                        {{ loading() ? 'Entrando...' : 'Entrar' }}
+                    </button>
                 </form>
             </div>
             <div class="flex w-full items-center justify-center">
