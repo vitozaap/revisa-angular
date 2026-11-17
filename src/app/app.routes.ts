@@ -1,4 +1,5 @@
 import type { Routes } from '@angular/router';
+import { authGuard } from './auth.guard';
 import { Login } from './(auth)/login/login';
 import { Register } from './(auth)/register/register';
 import { History } from './(user)/history/history';
@@ -24,21 +25,26 @@ export const routes: Routes = [
   {
     path: 'home',
     component: Home,
+    canActivate: [authGuard],
   },
   {
     path: 'history',
     component: History,
+    canActivate: [authGuard],
   },
   {
     path: 'history/:id',
     component: Report,
+    canActivate: [authGuard],
   },
   {
     path: 'new-analysis',
     component: NewAnalysis,
+    canActivate: [authGuard],
   },
   {
     path: 'resume',
     component: ResumePage,
+    canActivate: [authGuard],
   },
 ];

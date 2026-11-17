@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { PIcon } from '@primeicons/angular/p-icon';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -7,6 +7,7 @@ import { finalize } from 'rxjs';
 import type { Resume, Review } from '../../models/review';
 import { ResumeService } from '../../services/resume.service';
 import { ReviewService } from '../../services/review.service';
+import { UserService } from '../../services/user.service';
 import { AppSidebar } from '../../sidebar/sidebar';
 import { validateResumeFile } from '../../utils/resume-file';
 import { scoreClass } from '../../utils/score';
@@ -19,8 +20,9 @@ import { scoreClass } from '../../utils/score';
 export class Home {
   private resumeService = inject(ResumeService);
   private reviewService = inject(ReviewService);
+  private userService = inject(UserService);
 
-  firstName = 'Victor';
+  firstName = computed(() => this.userService.user()?.name.split(' ')[0] ?? '');
   resume = signal<Resume | null>(null);
   recentReviews = signal<Review[]>([]);
   error = signal('');

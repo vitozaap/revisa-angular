@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { PIcon } from '@primeicons/angular/p-icon';
 import type { MenuItem } from 'primeng/api';
@@ -6,6 +6,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { type Menu, MenuModule } from 'primeng/menu';
 import { SidebarModule } from 'primeng/sidebar';
 import { Header } from '../header/header';
+import { UserService } from '../services/user.service';
 import { Logo } from '../logo/logo';
 
 interface SidebarRoutes {
@@ -30,17 +31,18 @@ interface SidebarRoutes {
 })
 export class AppSidebar {
   private router = inject(Router);
+  private userService = inject(UserService);
 
   sidebarId = 'app-sidebar';
 
-  userName = 'Victor Santos';
-  // dev, email de exemplo enquanto não há sessão do usuário
-  userEmail = 'victor.santos@email.com';
+  // Vem do authGuard, que busca o usuário antes de abrir a tela
+  userName = computed(() => this.userService.user()?.name ?? '');
+  userEmail = computed(() => this.userService.user()?.email ?? '');
 
   // O e-mail vira o cabeçalho do grupo, no estilo padrão do p-menu da lib 
-  userMenuItems: MenuItem[] = [
+  userMenuItems = computed<MenuItem[]>(() => [
     {
-      label: this.userEmail,
+      label: this.userEmail(),
       items: [
         { separator: true },
         {
@@ -49,12 +51,11 @@ export class AppSidebar {
           // Mesmo padrão do item "Delete" nos exemplos de menu das docs do PrimeNG
           linkClass:
             'text-red-500! dark:text-red-400! [&_.p-menu-item-icon]:text-red-500! dark:[&_.p-menu-item-icon]:text-red-400!',
-          //dev, por enquanto só volta para o login; depois vai matar sessão no back
-          command: () => this.router.navigate(['/login']),
+          command: () => this.logout(),
         },
       ],
     },
-  ];
+  ]);
   routes: SidebarRoutes[] = [
     {
       label: 'Home',
@@ -83,13 +84,21 @@ export class AppSidebar {
     container.style.left = `${button.right - container.offsetWidth + window.scrollX}px`;
   }
 
-  get initials() {
-    // Pedi para IA para me ajudar com essa, serve apenas para pegar as inicias do nome para gerar o avatarzinho
-    return this.userName
+  // Pedi para IA para me ajudar com essa, serve apenas para pegar as inicias do nome para gerar o avatarzinho
+  initials = computed(() =>
+    this.userName()
       .split(' ')
       .map((part) => part[0])
       .slice(0, 2)
       .join('')
-      .toUpperCase();
+      .toUpperCase(),
+  );
+
+  // Encerra a sessão no back e volta p o login
+  private logout() {
+    this.userService.logout().subscribe(() => {
+      this.userService.user.set(null);
+      this.router.navigate(['/login']);
+    });
   }
 }

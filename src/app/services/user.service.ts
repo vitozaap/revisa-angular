@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import type { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import type { LoginRequest, RegisterRequest, User } from '../models/user';
@@ -9,6 +9,9 @@ import type { LoginRequest, RegisterRequest, User } from '../models/user';
 export class UserService {
   private http = inject(HttpClient);
   private url = `${environment.apiUrl}/auth`;
+
+  // Usuário logado, authGuard que carrega
+  user = signal<User | null>(null);
 
   register(body: RegisterRequest): Observable<User> {
     return this.http.post<User>(`${this.url}/register`, body);

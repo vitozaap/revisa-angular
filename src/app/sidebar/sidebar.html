@@ -46,16 +46,16 @@
                 (click)="userMenu.toggle($event)"
               >
                 <p-avatar
-                  [label]="initials"
+                  [label]="initials()"
                   shape="circle"
                   class="size-6 shrink-0 text-xs"
                 />
-                <span class="flex-1 truncate">{{ userName }}</span>
+                <span class="flex-1 truncate">{{ userName() }}</span>
                 <span class="flex">
                   <svg pIcon="chevron-up" [size]="12" class="text-subtle"></svg>
                 </span>
               </button>
-              <p-menu #userMenu id="user-menu" [model]="userMenuItems" [popup]="true" appendTo="body" (onShow)="alignToButtonEnd(userMenu)">
+              <p-menu #userMenu id="user-menu" [model]="userMenuItems()" [popup]="true" appendTo="body" (onShow)="alignToButtonEnd(userMenu)">
                 <ng-template #item let-item>
                   <a class="p-menu-item-link" [class]="item.linkClass">
                     <svg [pIcon]="item.icon" class="p-menu-item-icon"></svg>
