@@ -3,7 +3,7 @@ import { type CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { UserService } from './services/user.service';
 
-// Só deixa abrir as telas logadas se o /auth/me responder; senão manda p login
+// Só deixa abrir as telas logadas se o /auth/me responder se n, manda p login
 export const authGuard: CanActivateFn = () => {
   const userService = inject(UserService);
   const router = inject(Router);

@@ -33,7 +33,7 @@ export interface Review {
   notAttendedRequirements: string[];
   finalScore: number;
   resumeScore: number;
-  // Aderência à vaga (0 a 100); null quando a análise é sem vaga
+  // Aderência à vaga (0 a 100) null quando análise sem vaga
   jobAdherenceScore: number | null;
   feedbackTitle: FeedbackTitle;
   feedbackDescription: string;
